@@ -1,3 +1,5 @@
+$ProgressPreference = 'SilentlyContinue'
+
 # 1. Define os caminhos
 $downloadsPath = Join-Path $env:USERPROFILE "Downloads\UiPath"
 $exePath = Join-Path $downloadsPath "ABP_Installer.exe"
@@ -13,7 +15,7 @@ $url = "https://github.com/tekfly/ABP_Install_ProgramEXE/releases/download/Prere
 Write-Host "A descarregar o instalador para a pasta Downloads\UiPath..." -ForegroundColor Green
 
 # 4. Faz o download
-Invoke-WebRequest -Uri $url -OutFile $exePath
+curl.exe -L -o "$exePath" "$url"
 
 # 5. Executa o programa e espera que ele feche
 $process = Start-Process -FilePath $exePath -Verb RunAs -PassThru -Wait
