@@ -1,0 +1,286 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="ABP_Install_ProgramEXE.MainWindow"
+        Title="ABP UiPath Custom Installer"
+        Height="800" Width="1024">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="20">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- HEADER -->
+            <TextBlock Text="ABP UiPath Custom Installer"
+                       FontSize="26"
+                       FontWeight="Bold"
+                       Margin="0,0,0,16"/>
+
+            <!-- ================= SCREEN 1 ================= -->
+            <Grid x:Name="Screen1Grid" Grid.Row="1" Visibility="Visible">
+
+                <StackPanel>
+
+                    <!-- ONLINE DOWNLOAD -->
+                    <GroupBox Header="Online Download (optional)" Margin="0,0,0,20">
+                        <Expander IsExpanded="False">
+                            <StackPanel Margin="12">
+
+                                <TextBlock Text="If this machine has internet, you can download the required installer files."
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,10"/>
+
+                                <Button x:Name="BtnRefreshJson"
+                                        Content="Refresh Products"
+                                        Width="150"
+                                        HorizontalAlignment="Right"
+                                        Click="BtnRefreshJson_Click"/>
+                                <!-- PRODUCTS DOWNLOAD -->
+                                <!-- HEADER ROW -->
+                                <Grid Margin="0,20,0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="Product"
+                                               FontWeight="SemiBold"
+                                               Grid.Column="0"/>
+
+                                    <TextBlock Text="Version"
+                                               FontWeight="SemiBold"
+                                               Grid.Column="1"/>
+
+                                </Grid>
+
+                                <!-- DYNAMIC PRODUCT + VERSION PAIRS -->
+                                <StackPanel x:Name="MainPairsPanel"/>
+
+                                <!-- ADD BUTTON -->
+                                <Button x:Name="AddMainPairBtn"
+                                        Content="+ Add Product"
+                                        Width="150"
+                                        Margin="0,10,0,10"
+                                        Click="AddMainPairBtn_Click"/>
+
+                                <!-- Extra DOWNLOADS ################################################## -->
+                                <Expander IsExpanded="False">
+                                    <!-- HEADER ROW -->
+                                    <StackPanel x:Name="Extraprodstack" Visibility="Visible" Background="LightGray">
+                                        <TextBlock Text="Extra Products"
+                                                       FontWeight="SemiBold"
+                                                       Grid.Column="0"
+                                                   HorizontalAlignment="Center"/>
+
+
+                                        <Grid Margin="0,20,0,5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="80"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Text="Extra Products"
+                                                       FontWeight="SemiBold"
+                                                       Grid.Column="0"/>
+
+                                            <TextBlock Text="Versions"
+                                                       FontWeight="SemiBold"
+                                                       Grid.Column="1"/>
+
+                                        </Grid>
+
+
+                                        <!-- DYNAMIC PRODUCT + VERSION PAIRS -->
+                                        <StackPanel x:Name="ExtraPairsPanel"/>
+
+                                        <!-- ADD BUTTON -->
+                                        <Button x:Name="AddExtraPairBtn"
+                                            Content="+ Add Extra Product"
+                                            Width="150"
+                                            Margin="0,10,0,10"
+                                            Click="AddExtraPairBtn_Click"/>
+
+
+
+                                    </StackPanel>
+                                </Expander>
+                                <!-- ACTION BUTTONS -->
+                                <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
+                                    <Button x:Name="BtnRefreshJsonList"
+                                            Content="Atualizar Lista (JSON)"
+                                            Click="BtnRefreshJson_Click"
+                                            Margin="5"/>
+
+                                    <Button x:Name="BtnInstalar"
+                                            Content="Descarregar e Instalar"
+                                            Click="BtnInstalar_Click"
+                                            Margin="5"
+                                            IsEnabled="False"/>
+                                </StackPanel>
+
+                                <!-- TARGET FOLDER -->
+                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                    <TextBlock Text="Target folder:" Width="120"/>
+                                    <TextBox x:Name="DownloadTargetBox" Width="500" TextChanged="DownloadTargetBox_TextChanged"/>
+                                    <Button x:Name="BrowseDownloadTargetBtn"
+                                            Content="Browse"
+                                            Width="90"
+                                            Margin="10,0,0,0"
+                                            Click="BrowseDownloadTargetBtn_Click"/>
+                                </StackPanel>
+
+                                <!-- DOWNLOAD -->
+                                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                                    <Button x:Name="DownloadBtn"
+                                            Content="Download Installer Files"
+                                            Width="220" Click="DownloadBtn_Click"/>
+                                    <ProgressBar x:Name="DownloadProgressBar"
+                                                 Width="250"
+                                                 Height="18"
+                                                 Margin="12,0,0,0"/>
+                                    <TextBlock x:Name="DownloadStatus"
+                                               Margin="10,0,0,0"/>
+                                </StackPanel>
+
+                            </StackPanel>
+                        </Expander>
+                    </GroupBox>
+
+                    <!-- OFFLINE VALIDATION -->
+                    <GroupBox Header="Offline Files (select an existing folder)" Margin="0,0,0,20">
+                        <StackPanel Margin="12">
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Installer folder:" Width="120"/>
+                                <TextBox x:Name="InstallerFolderBox" Width="500"/>
+                                <Button x:Name="BrowseInstallerFolderBtn"
+                                        Content="Browse"
+                                        Width="90"
+                                        Margin="10,0,0,0" Click="BrowseInstallerFolderBtn_Click"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="Expected SHA256:" Width="120"/>
+                                <TextBox x:Name="ExpectedShaBox" Width="600" IsEnabled="False"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                                <Button x:Name="ValidateInstallerBtn"
+                                        Content="Validate Files"
+                                        Width="160" Click="ValidateInstallerBtn_Click"/>
+                                <TextBlock x:Name="InstallerValidationResult"
+                                           Margin="12,0,0,0"
+                                           Foreground="DarkBlue"/>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </GroupBox>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="NextToInstallBtn"
+                                Content="Next -&gt; Installation"
+                                Width="180"
+                                Height="35"
+                                IsEnabled="False" Click="NextToInstallBtn_Click"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Grid>
+
+            <!-- ================= SCREEN 2 ================= -->
+            <Grid x:Name="Screen2Grid" Grid.Row="1" Visibility="Collapsed">
+
+                <StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button x:Name="BackToScreen1Btn"
+                                Content="← Back"
+                                Width="90" Click="BackToScreen1Btn_Click"/>
+                        <TextBlock Text="Proceed with installation and configuration"
+                                   Margin="10,6,0,0"
+                                   FontWeight="SemiBold"/>
+                    </StackPanel>
+                    <!-- CHANGE FOR CHOOSE WHAT TO INSTALL (LIST) -->
+                    <GroupBox Header="Files to install" Margin="0,0,0,18">
+                        <ListView x:Name="FilesListView" MinHeight="30" MaxHeight="200">
+                            <!-- POPULATE THIS WITH ALL THE FILES FROM THE FOLDER PATH (  InstallerFolderBox.Text) AND ALLOW THE USER TO SELECT WHICH ONES TO INSTALL. -->
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center" Margin="5"/>
+                                        <TextBlock Text="{Binding FileName}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </GroupBox>
+                    <GroupBox Header="Installation Mode for UiPathStudio.MSI">
+                        <Grid Margin="12">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel>
+                                <CheckBox x:Name="ServiceModeCheck1"
+                                    Content="Install in Service Mode"
+                                    IsChecked="True"/>
+                                <CheckBox x:Name="AllUsersCheck1"
+                                    Content="Install for All Users"
+                                    IsChecked="True"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <CheckBox x:Name="RobotInstallCheck1"
+                                    Content="Install Robot"
+                                    IsChecked="True"/>
+                                <CheckBox x:Name="StudioInstallCheck1"
+                                    Content="Install Studio"
+                                    IsChecked="False"/>
+                            </StackPanel>
+
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="Generated PowerShell Script">
+                        <StackPanel Margin="12">
+
+                            <TextBox x:Name="ScriptOutputBox"
+                                     Height="260"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     VerticalScrollBarVisibility="Auto"/>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <Button x:Name="GenerateScriptBtn"
+                                        Content="Generate Script"
+                                        Width="150" Click="GenerateScriptBtn_Click"/>
+                                <Button x:Name="CopyScriptBtn"
+                                        Content="Copy"
+                                        Width="90"
+                                        Margin="10,0,0,0"/>
+                                <Button x:Name="SaveScriptBtn"
+                                        Content="Save to File"
+                                        Width="130"
+                                        Margin="10,0,0,0"/>
+                                <Button x:Name="RunInstallerBtn"
+                                        Content="Run Installer"
+                                        Width="150"
+                                        Margin="10,0,0,0" Click="RunInstallerBtn_Click"/>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </GroupBox>
+
+                </StackPanel>
+            </Grid>
+
+        </Grid>
+    </ScrollViewer>
+</Window>
